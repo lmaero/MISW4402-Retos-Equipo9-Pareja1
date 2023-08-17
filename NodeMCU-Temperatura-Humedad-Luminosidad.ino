@@ -204,6 +204,9 @@ void loop() {
   int ldrValue = analogRead(ldrPin);
   long lightIntensity = getLightIntensity(ldrValue);
 
+  delay(1000); // Espera 1 segundo antes de la siguiente lectura
+  dht.begin(); // Reinicia los sensores y los prepara para la lectura
+
   // Transforma la información a la notación JSON para poder enviar los datos
   // El mensaje que se envía es de la forma {"value": x}, donde x es el valor de temperatura, humedad o intensidad lumínica
 
