@@ -14,13 +14,13 @@ DHT dht(dht_dpin, DHTTYPE);
 const int ldrPin = A0;
 
 // Usuario uniandes sin @uniandes.edu.co
-#define HOSTNAME "lm.guzmanp1"
+#define HOSTNAME "d.eslava"
 
 // Conexión a Wifi
 // Nombre de la red Wifi
-const char ssid[] = "FamiliaGuzman";
+const char ssid[] = "Auto First Class";
 // Contraseña de la red Wifi
-const char pass[] = "901127Packers!";
+const char pass[] = "3002071960";
 
 
 // Conexión a Mosquitto
@@ -28,21 +28,21 @@ const char MQTT_HOST[] = "iotlab.virtual.uniandes.edu.co";
 const int MQTT_PORT = 8082;
 
 // Usuario uniandes sin @uniandes.edu.co
-const char MQTT_USER[] = "lm.guzmanp1";
-const char MQTT_PASS[] = "202216873";
+const char MQTT_USER[] = "d.eslava";
+const char MQTT_PASS[] = "202216113";
 
 // SUBSCRIBER
 const char MQTT_SUB_TOPIC[] = HOSTNAME "/";
 
 // PUBLISHERS
 // Tópico al que se enviarán los datos de humedad
-const char MQTT_PUB_TOPIC1[] = "humedad/zipaquira/" HOSTNAME;
+const char MQTT_PUB_TOPIC1[] = "humedad/floridablanca/" HOSTNAME;
 
 // Tópico al que se enviarán los datos de temperatura
-const char MQTT_PUB_TOPIC2[] = "temperatura/zipaquira/" HOSTNAME;
+const char MQTT_PUB_TOPIC2[] = "temperatura/floridablanca/" HOSTNAME;
 
 // Tópico al que se enviarán los datos de intensidad lumínica
-const char MQTT_PUB_TOPIC3[] = "luminosidad/zipaquira/" HOSTNAME;
+const char MQTT_PUB_TOPIC3[] = "luminosidad/floridablanca/" HOSTNAME;
 
 //////////////////////////////////////////////////////
 
@@ -93,13 +93,18 @@ long getLightIntensity(int sensorValue) {
   const int DARK_RESISTANCE = 500;        // Dark resistance in KΩ
   const float LIGHT_RESISTANCE = 7.5;     // Resistance in light (10 Lux) in KΩ
   const int CALIBRATION_RESISTANCE = 10;  // Calibration resistance in KΩ
-  const int MIN_VALUE = 0;
-  const int MAX_VALUE = 30000;
+  const int MIN_SENSOR_LUMENS_VALUE = 0;
+  const int MAX_SENSOR_LUMENS_VALUE = 68266;
+  const int MAX_SENSOR_DIGITAL_VALUE = 1024;
 
-  const long lightIntensity = ((long)sensorValue * DARK_RESISTANCE * 10) / ((long)(LIGHT_RESISTANCE * CALIBRATION_RESISTANCE * (1023 - sensorValue)));
+  const long lightIntensity = ((long)sensorValue * DARK_RESISTANCE * 10) / ((long)(LIGHT_RESISTANCE * CALIBRATION_RESISTANCE * (MAX_SENSOR_DIGITAL_VALUE - (sensorValue - 1))));
 
-  if(lightIntensity < MIN_VALUE || lightIntensity > MAX_VALUE) {
-    return 0;
+  if (lightIntensity < MIN_SENSOR_LUMENS_VALUE) {
+    return MIN_SENSOR_LUMENS_VALUE;
+  }
+
+  if (lightIntensity > MAX_SENSOR_LUMENS_VALUE) {
+    return MAX_SENSOR_LUMENS_VALUE;
   }
 
   return lightIntensity;
