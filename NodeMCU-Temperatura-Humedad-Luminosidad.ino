@@ -22,7 +22,6 @@ const char ssid[] = "FamiliaGuzman";
 // Contraseña de la red Wifi
 const char pass[] = "901127Packers!";
 
-
 // Conexión a Mosquitto
 const char MQTT_HOST[] = "iotlab.virtual.uniandes.edu.co";
 const int MQTT_PORT = 8082;
@@ -91,10 +90,10 @@ void receivedCallback(char* topic, byte* payload, unsigned int length) {
 // Function to convert LDR reading to Lux
 long getLightIntensity(int sensorValue) {
   const int DARK_RESISTANCE = 500;        // Dark resistance in KΩ
-  const float LIGHT_RESISTANCE = 7.5;     // Resistance in light (10 Lux) in KΩ
+  const int LIGHT_RESISTANCE = 8;         // Resistance in light (10 Lux) in KΩ
   const int CALIBRATION_RESISTANCE = 10;  // Calibration resistance in KΩ
   const int MIN_SENSOR_LUMENS_VALUE = 0;
-  const int MAX_SENSOR_LUMENS_VALUE = 68266;
+  const long MAX_SENSOR_LUMENS_VALUE = 68266;
   const int MAX_SENSOR_DIGITAL_VALUE = 1024;
 
   const long lightIntensity = ((long)sensorValue * DARK_RESISTANCE * 10) / ((long)(LIGHT_RESISTANCE * CALIBRATION_RESISTANCE * (MAX_SENSOR_DIGITAL_VALUE - (sensorValue - 1))));
