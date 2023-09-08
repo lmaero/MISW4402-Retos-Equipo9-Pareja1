@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 asgiref = "*"
-Django = "==3.2.4"
+Django = "==3.2.20"
 html5lib = "==1.1"
 paho-mqtt = "==1.5.1"
 pytz = "==2021.1"
