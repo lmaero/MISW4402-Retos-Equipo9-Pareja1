@@ -602,6 +602,7 @@ def data_analysis(request):
     # Get start and end timestamps from query parameters, if provided
     start_timestamp = request.GET.get("start", None)
     end_timestamp = request.GET.get("end", None)
+    print(f'Start: {start_timestamp}. End: {end_timestamp}')
 
     # Convert timestamps to datetime objects
     try:
@@ -626,6 +627,9 @@ def data_analysis(request):
         data_query = Data.objects.filter(measurement=measurement)
         if start_date and end_date:
             data_query = data_query.filter(time__range=(start_date, end_date))
+
+        print(f'Total analyzed {measurement.name} measures:'
+              f' {data_query.count()}')
 
         avg_value = data_query.aggregate(Avg("value"))["value__avg"]
 

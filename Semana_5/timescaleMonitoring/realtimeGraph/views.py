@@ -555,6 +555,83 @@ def get_map_json(request, **kwargs):
     return JsonResponse(data_result)
 
 
+def data_analysis(request):
+    """
+    Calculate and retrieve analysis data for environmental measurements.
+
+    This endpoint calculates statistics such as the average, maximum, and minimum values
+    for each measurement type within a specified time range.
+
+    Parameters:
+    - start (optional): Start timestamp in milliseconds since epoch.
+    - end (optional): End timestamp in milliseconds since epoch.
+
+    Example Usage:
+    - GET /data-analysis/?start=1630838400000&end=1631347200000
+    - GET /data-analysis/ (without start and end parameters to analyze all data)
+
+    Returns:
+    A JSON response containing analysis data for each measurement type.
+    """
+    analysis_result = {}
+
+    # Get start and end timestamps from query parameters, if provided
+    start_timestamp = request.GET.get("start", None)
+    end_timestamp = request.GET.get("end", None)
+    print(f'Start: {start_timestamp}. End: {end_timestamp}')
+
+    # Convert timestamps to datetime objects
+    try:
+        if start_timestamp:
+            start_date = datetime.fromtimestamp(float(start_timestamp) / 1000)
+        else:
+            start_date = datetime.min  # Analyze all data
+
+        if end_timestamp:
+            end_date = datetime.fromtimestamp(float(end_timestamp) / 1000)
+        else:
+            end_date = datetime.now()
+    except ValueError:
+        return JsonResponse({"error": "Invalid timestamp format"})
+
+    # Calculate the average value of each measurement type over time
+    measurements = Measurement.objects.all()
+    measurement_data = []
+
+    for measurement in measurements:
+        data_query = Data.objects.filter(measurement=measurement)
+
+        total_measurements = 0
+        if start_timestamp and end_timestamp:
+            data_query = data_query.filter(
+                base_time__range=(start_date, end_date))
+
+        for data in data_query:
+            total_measurements = total_measurements + len(data.values)
+
+        print(f'Total analyzed {measurement.name} measures:'
+              f' {total_measurements}')
+
+        avg_value = data_query.aggregate(Avg("avg_value"))["avg_value__avg"]
+        max_value = data_query.aggregate(Avg("max_value"))["max_value__avg"]
+        min_value = data_query.aggregate(Avg("min_value"))["min_value__avg"]
+
+        measurement_data.append({
+            "measurement_name": measurement.name,
+            "measurement_unit": measurement.unit,
+            "average_value": avg_value if avg_value is not None else 0,
+            "max_value_in_range": max_value if max_value is not None else 0,
+            "min_value_in_range": min_value if min_value is not None else 0,
+        })
+
+    # Sort measurements by average value in descending order
+    measurement_data.sort(key=lambda x: x["average_value"], reverse=True)
+
+    analysis_result["measurement_data"] = measurement_data
+
+    return JsonResponse(analysis_result)
+
+
 class RemaView(TemplateView):
     template_name = "rema.html"
 
