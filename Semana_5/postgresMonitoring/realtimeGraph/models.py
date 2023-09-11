@@ -1,6 +1,6 @@
+from datetime import timedelta
+
 from django.db import models, IntegrityError
-from django.db.models.fields import DateTimeField
-from datetime import datetime, timedelta
 from django.utils import timezone
 
 USER_ROLE_ID = 1
@@ -79,7 +79,7 @@ class Measurement(models.Model):
     unit = models.CharField(max_length=50, blank=False)
     max_value = models.FloatField(null=True, blank=True, default=None)
     min_value = models.FloatField(null=True, blank=True, default=None)
-    active = active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
 
     def str(self):
         return '{} {}'.format(self.name, self.unit)

@@ -1,24 +1,13 @@
-from django.db import models, IntegrityError
-from django.db.models.fields import DateTimeField
-from datetime import datetime, timedelta
-from django.utils import timezone
-from django.contrib.postgres.fields import ArrayField
+from datetime import datetime
 from typing import (
     Any,
-    Dict,
-    Generic,
-    Iterable,
-    Iterator,
-    List,
     MutableMapping,
     Optional,
-    Sequence,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
 )
-import psycopg2
+
+from django.contrib.postgres.fields import ArrayField
+from django.db import models, IntegrityError
+from django.utils import timezone
 
 USER_ROLE_ID = 1
 
@@ -93,7 +82,7 @@ class Measurement(models.Model):
     unit = models.CharField(max_length=50, blank=False)
     max_value = models.FloatField(null=True, blank=True, default=None)
     min_value = models.FloatField(null=True, blank=True, default=None)
-    active = active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
 
     def str(self):
         return "{} {}".format(self.name, self.unit)
@@ -150,11 +139,11 @@ class Data(models.Model):
             )
         ]
 
-    def base_time_now():
+    def base_time_now(self):
         now = timezone.now()
         return datetime(now.year, now.month, now.day, now.hour, tzinfo=now.tzinfo)
 
-    def timestamp_now():
+    def timestamp_now(self):
         now = timezone.now()
         return int(now.timestamp() * 1000000)
 
