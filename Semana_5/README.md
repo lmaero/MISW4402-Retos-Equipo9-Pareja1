@@ -85,5 +85,20 @@ Adicionalmente se consideró de interés realizar la comparativa de resultados e
 | Timescale (EC2)   | Primario   | 60        | 20951   | 0   | 21450 | 294.18    | 0.00%   | 2.8/sec    | 5.65            | 0.34        | 625.0      |
 | Timescale (EC2)   | Secundario | 60        | 6784    | 0   | 7093  | 71.14     | 0.00%   | 7.5/sec    | 7.41            | 1.17        | 623.0      |
 
-2. Reporte de la comparación de los resultados de las pruebas de carga actual para Postgre y Timescale. Soportar la comparación con capturas de pantalla de los resultados de Jmeter
+A continuación se adjuntan algunas de las capturas de pantalla para soportar los datos de la tabla anterior
+
+Variables (local)
+<img width="1728" alt="Screenshot 2023-09-11 at 11 47 10 AM" src="https://github.com/lmaero/MISW4402-Retos-Equipo9-Pareja1/assets/60992168/b2b39cf6-c718-417a-8d5c-ba09a7ed75b0">
+
+Postgres (local) Primario
+
+<img width="1728" alt="Screenshot 2023-09-11 at 11 46 46 AM" src="https://github.com/lmaero/MISW4402-Retos-Equipo9-Pareja1/assets/60992168/1bd1e990-bf6b-4618-b9c9-64b1c127e797">
+
+Variables (EC2)
+<img width="1728" alt="Screenshot 2023-09-11 at 1 04 53 PM" src="https://github.com/lmaero/MISW4402-Retos-Equipo9-Pareja1/assets/60992168/88dcabc1-2bd2-4cd7-bb8e-b80d26086ce2">
+
+Postgres (EC2) Primario
+<img width="1728" alt="Screenshot 2023-09-11 at 1 04 38 PM" src="https://github.com/lmaero/MISW4402-Retos-Equipo9-Pareja1/assets/60992168/7be8e495-5c1c-43c6-88eb-63e71eacfe5e">
+
+
 3. Explicación del porqué de los resultados apoyándose en los conceptos estudiados acerca de la capa de datos de un sistema IoT.
