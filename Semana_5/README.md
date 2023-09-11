@@ -2,10 +2,10 @@
 
 ## Integrantes - Equipo 9 - Pareja 1
 
-|Nombre|Correo|
-|------|------|
-|Diego Fernando Eslava Lozano|d.eslava@uniandes.edu.co|
-|Luis Miguel Guzman Perez|lm.guzmanp1@uniandes.edu.co|
+| Nombre                       | Correo                      |
+| ---------------------------- | --------------------------- |
+| Diego Fernando Eslava Lozano | d.eslava@uniandes.edu.co    |
+| Luis Miguel Guzman Perez     | lm.guzmanp1@uniandes.edu.co |
 
 ## Desarrollo del reto
 
@@ -66,6 +66,24 @@ A continuación se detalla la estructura elegida para la respuesta de los endpoi
   ]
 }
 ```
+
+### Despliegue y pruebas de carga
+
+#### Despliegue
+Para el despliegue de la aplicación se decidió realizar pruebas en el `localhost` conectado a la base de datos alimentada previamente en el tutorial. Esto con el fin de minimizar los riesgos o inconsistencias detectados en las librerías de las dos aplicaciones, ya que estas no están contenerizadas y dependen de la configuración de la máquina en donde se ejecuta.
+
+Adicionalmente se consideró de interés realizar la comparativa de resultados ejecutando la aplicación en una instancia distinta a la EC2 de la base de datos, es decir, en la máquina local.
+
+| Instancia         | Endpoint   | # Samples | Average | Min | Max   | Std. Dev. | Error % | Throughput | Received KB/sec | Sent KB/sec | Avg. Bytes |
+| ----------------- | ---------- | --------- | ------- | --- | ----- | --------- | ------- | ---------- | --------------- | ----------- | ---------- |
+| Postgres (local)  | Primario   | 60        | 43989   | 0   | 46330 | 3299.45   | 0.00%   | 1.3/sec    | 0.79            | 0.17        | 627.0      |
+| Postgres (local)  | Secundario | 60        | 23703   | 0   | 25015 | 1673.30   | 0.00%   | 2.4/sec    | 1.46            | 0.40        | 627.9      |
+| Postgres (EC2)    | Primario   | 60        | 44895   | 0   | 47938 | 5132.58   | 0.00%   | 1.2/sec    | 0.76            | 0.16        | 628.0      |
+| Postgres (EC2)    | Secundario | 60        | 24182   | 0   | 25761 | 2484.56   | 0.00%   | 2.3/sec    | 1.40            | 0.37        | 629.2      |
+| Timescale (local) | Primario   | 60        | 18784   | 0   | 21920 | 2025.63   | 0.00%   | 2.7/sec    | 1.63            | 0.35        | 624.0      |
+| Timescale (local) | Secundario | 60        | 6083    | 0   | 7249  | 489.88    | 0.00%   | 7.3/sec    | 4.42            | 1.21        | 619.0      |
+| Timescale (EC2)   | Primario   | 60        | 20951   | 0   | 21450 | 294.18    | 0.00%   | 2.8/sec    | 5.65            | 0.34        | 625.0      |
+| Timescale (EC2)   | Secundario | 60        | 6784    | 0   | 7093  | 71.14     | 0.00%   | 7.5/sec    | 7.41            | 1.17        | 623.0      |
 
 2. Reporte de la comparación de los resultados de las pruebas de carga actual para Postgre y Timescale. Soportar la comparación con capturas de pantalla de los resultados de Jmeter
 3. Explicación del porqué de los resultados apoyándose en los conceptos estudiados acerca de la capa de datos de un sistema IoT.
