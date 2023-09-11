@@ -1,30 +1,25 @@
-from datetime import datetime, tzinfo
 import json
-from os import name
-import time
-
 import tempfile
-from realtimeMonitoring.utils import getCityCoordinates
+import time
+from datetime import datetime
 
-from django.template.defaulttags import register
+import dateutil.relativedelta
 from django.contrib.auth import login, logout
-from realtimeGraph.forms import LoginForm
+from django.db.models import Avg, Max, Min
 from django.http import JsonResponse
 from django.http.response import (
     FileResponse,
-    Http404,
-    HttpResponse,
-    HttpResponseBadRequest,
-    HttpResponseNotFound,
     HttpResponseRedirect,
-    HttpResponseServerError,
 )
+from django.shortcuts import render
+from django.template.defaulttags import register
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.shortcuts import render
-from django.utils import timezone
-from random import randint
+
+from realtimeGraph.forms import LoginForm
+from realtimeMonitoring.utils import getCityCoordinates
 from .models import (
     City,
     Country,
@@ -36,9 +31,6 @@ from .models import (
     Station,
     User,
 )
-from realtimeMonitoring import settings
-import dateutil.relativedelta
-from django.db.models import Avg, Max, Min, Sum
 
 
 class DashboardView(TemplateView):
@@ -534,24 +526,23 @@ def get_map_json(request, **kwargs):
     for location in locations:
         stations = Station.objects.filter(location=location)
         locationData = Data.objects.filter(
-            station__in=stations, measurement__name=selectedMeasure.name, time__gte=start_ts, time__lte=end_ts,
+            station__in=stations, measurement__name=selectedMeasure.name,
+            time__gte=start_ts, time__lte=end_ts,
         )
         if locationData.count() <= 0:
             continue
         minVal = locationData.aggregate(Min("min_value"))["min_value__min"]
         maxVal = locationData.aggregate(Max("max_value"))["max_value__max"]
         avgVal = locationData.aggregate(Avg("avg_value"))["avg_value__avg"]
-        data.append(
-            {
-                "name": f"{location.city.name}, {location.state.name}, {location.country.name}",
-                "lat": location.lat,
-                "lng": location.lng,
-                "population": stations.count(),
-                "min": minVal if minVal != None else 0,
-                "max": maxVal if maxVal != None else 0,
-                "avg": round(avgVal if avgVal != None else 0, 2),
-            }
-        )
+        data.append({
+            "name": f"{location.city.name}, {location.state.name}, {location.country.name}",
+            "lat": location.lat,
+            "lng": location.lng,
+            "population": stations.count(),
+            "min": minVal if minVal != None else 0,
+            "max": maxVal if maxVal != None else 0,
+            "avg": round(avgVal if avgVal != None else 0, 2),
+        })
 
     startFormatted = start.strftime("%d/%m/%Y") if start != None else " "
     endFormatted = end.strftime("%d/%m/%Y") if end != None else " "
